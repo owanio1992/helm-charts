@@ -1,0 +1,6 @@
+dependencies:
+- name: value_lab2
+  repository: oci://harbor-cloud.timber.zndev.link/helm-charts
+  version: 0.1.0
+digest: sha256:c89cb591409dede391c8abdbe4d0f5108c2f36b7205b9fb53a38fa15868170de
+generated: "2023-11-30T16:10:20.620458891+08:00"
