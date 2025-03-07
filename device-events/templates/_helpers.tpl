@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "value_lab2.name" -}}
+{{- define "device-events.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "value_lab2.fullname" -}}
+{{- define "device-events.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "value_lab2.chart" -}}
+{{- define "device-events.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "value_lab2.labels" -}}
-helm.sh/chart: {{ include "value_lab2.chart" . }}
-{{ include "value_lab2.selectorLabels" . }}
+{{- define "device-events.labels" -}}
+helm.sh/chart: {{ include "device-events.chart" . }}
+{{ include "device-events.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "value_lab2.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "value_lab2.name" . }}
+{{- define "device-events.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "device-events.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "value_lab2.serviceAccountName" -}}
+{{- define "device-events.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "value_lab2.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "device-events.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

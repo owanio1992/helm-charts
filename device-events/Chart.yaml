@@ -1,5 +1,5 @@
 apiVersion: v2
-name: value_lab1
+name: device-events
 description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -24,6 +24,6 @@ version: 0.1.0
 appVersion: "1.16.0"
 
 dependencies:
-- name: value_lab2
-  version: "0.1.0"
-  repository: "https://github.com/owanio1992/helm-charts"
+  - name: dragonfly
+    version: "v1.26.0"
+    repository: "file://../dragonfly"

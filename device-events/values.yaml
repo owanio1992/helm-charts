@@ -1,0 +1,122 @@
+# Default values for device-events.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+restartPolicy: Always
+
+image:
+  repository: docker/device-events
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: [{ "name": "docker-hub" }]
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 65Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+volumes:
+  - name: config
+    configMap:
+      name: '{{ include "device-events.fullname" . }}'
+volumeMounts:
+  - name: config
+    mountPath: /home/ubuntu/device-events/device-events.yaml
+    subPath: device-events.yaml
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/arch
+              operator: In
+              values:
+                - amd64
+
+config:
+  logging:
+    console: true
+    file: ""
+    format: "json"
+    level: "info"
+    loggers: {}
+
+dragonfly:
+  image:
+    tag: v1.26.1
+  serviceAccount:
+    create: false
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: "http"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "6379"
+  storage:
+    enabled: true
+    storageClassName: ""
+    requests: 1Gi
+  extraArgs:
+    - --snapshot_cron=*/5 * * * * # cron format
+    - --dbfilename=dump
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+  affinity:
+    {}
+    # nodeAffinity:
+    #   requiredDuringSchedulingIgnoredDuringExecution:
+    #     nodeSelectorTerms:
+    #     - matchExpressions:
+    #       - key: node-lifetime
+    #         operator: In
+    #         values:
+    #         - stable
+  probes:
+    livenessProbe:
+      initialDelaySeconds: 1
+    readinessProbe:
+      initialDelaySeconds: 1
